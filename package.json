@@ -1,0 +1,11 @@
+{
+  "name": "verto-meter",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/jroop/verto-meter.git",
+  "author": "joe.roop@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "onoff": "^6.0.1"
+  }
+}
