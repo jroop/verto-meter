@@ -5,7 +5,15 @@
   "repository": "https://github.com/jroop/verto-meter.git",
   "author": "joe.roop@gmail.com",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
-    "onoff": "^6.0.1"
+    "express": "^4.17.1",
+    "onoff": "^6.0.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.2"
   }
 }
