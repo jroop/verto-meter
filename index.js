@@ -5,22 +5,45 @@ const path = require('path')
 const stateAPI = require('./routes/state')(app)
 const State = require('./lib/State')
 const PinAlert = require('./lib/PinAlert')
+const {TableUtil, TableClimbs} = require('./lib/db')
 
-let state = new State({
-  distancePerTick: 0.5
-})
-
-let logs = []
+let table = null /* save reference to database */
 
 let config = {
-  port: process.env.APP_PORT || 8000
+  PORT: process.env.APP_PORT || 80,
+  TIMETOSAVE: process.env.APP_TIMETOSAVE || 10000,
+  DISTANCEPERTICK: process.env.APP_DISTANCEPERTICK || 0.5, /* ft */
+  NOGPIO: process.env.APP_NOGPIO || false,
+  TICKPIN: process.env.APP_TICKPIN || 4, /* GPIO pin to use */
+  DBPATH: process.env.APP_DBPATH || path.join(require('os').homedir(), 'verto-meter.db'),
+  DBTABLE: process.env.APP_DBTABLE || 'climbs'
 }
 
+let state = new State({
+  distancePerTick: config.DISTANCEPERTICK
+})
+
+const main = async () => {
+  try {
+    table = await TableClimbs.init({
+      dbPath: config.DBPATH,
+      tableName: config.DBTABLE
+    })
+  } catch (e) {
+    console.error(e)
+  }
+}
+main()
+
 let timed = () => {
-  return setTimeout(() => {
+  return setTimeout(async () => {
     /* save */
     console.log('save to db', state.values())
-    logs.unshift(state.values())
+    try {
+      await table.insert(state.values())
+    } catch (e) {
+      console.error(e)
+    }
     state.reset()
   }, 10000)
 }
@@ -36,33 +59,44 @@ let ticker = (e, v) => {
   state.tick()
 }
 
-let pin = new PinAlert({pin: 4})
-pin.register(ticker)
 
-// const timer = async (t) => {
-//   return new Promise(resolve => {
-//     setTimeout(() => {
-//       resolve(t)
-//     }, t)
-//   })
-// }
+if (config.NOGPIO) {
+  const timer = async (t) => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(t)
+      }, t)
+    })
+  }
 
-// const runner = async () => {
-//   for (let t of [1000, 200, 200, 300, 2500, 300]) {
-//     let res = await timer(t)
-//     console.log(res)
-//     ticker()
-//   }
-// }
-// runner()
+  const runner = async () => {
+    for (let t of [1000, 200, 200, 300, 2500, 300]) {
+      let res = await timer(t)
+      console.log(res)
+      ticker()
+    }
+  }
+  runner()
+} else { /* have GPIO pins connected */
+  let pin = new PinAlert({pin: config.TICKPIN})
+  pin.register(ticker)
+}
 
 
 app.get('/', (req, res) => {
-  res.json({name: 'hello'})
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-app.get('/logs', (req, res) => {
-  res.json(logs)
+app.get('/user', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'user.html'))
+})
+
+app.get('/climbs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'climbs.html'))
+})
+
+app.get('/logs', async (req, res) => {
+  res.json(await table.findAll(true))
 })
 
 app.use('/state', stateAPI(state))
@@ -77,6 +111,6 @@ app.use((err, req, res, next) => {
   })
 })
 
-app.listen(config.port, () => {
-  console.log(`running on port: ${config.port}`)
+app.listen(config.PORT, () => {
+  console.log(`running on port: ${config.PORT}`)
 })

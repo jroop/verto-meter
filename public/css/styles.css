@@ -1,5 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Ubuntu&display=swap');
 body {
-  background-color: #333333;
-  color: #dddddd;
-  font-size: 18pt;
+  color: #333;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+.nav {
+  margin: 0em;
+  background-color: #42a5f5;
+  padding: 0.2em;
+  border-top: 0.5em solid #0077c2;
+  display: flex;
+  justify-content: space-between;
+}
+.nav .title {
+  color: #fff;
+  font-size: 2.2em;
+}
+.nav .links {
+  display: flex;
+  align-items: flex-end;
+}
+.nav .links a {
+  margin: 0.5em;
+  color: #fff;
+}
+
+.card {
+  margin: 0.5em;
+  /* border: 1px solid #aaaaaa; */
+  border-radius: 2px;
+  box-shadow: 0 3px 7px #aaa;
+  padding: 0.5em;
+}
+.row {
+  border-bottom: 1px solid #aaa;
+  padding: 0.25em;
+}
+.record {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25em;
+  border-bottom: 1px solid #333;
+}
+.record .parameter {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.record .parameter div {
+  padding: 0 0.5em;
+}
+.button {
+  background-color: #0077c2;
+  border: none;
+  padding: 0.5em 1.0em;
+  margin: 0.5em 0;
+  font-size: inherit;
+  color: #fff;
+  border-radius: 2px;
+}
+.button:hover {
+  background-color: #42a5f5;
+}
+input {
+  padding: 0.5em;
+  margin: 0.25em;
+  border: 1px solid #333;
+}
+
+@media only screen and (max-device-width: 500px) {
+  body {
+    font-size: 300%;
+  }
+  input {
+    font-size: 100%;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+  }
+  .record .parameter {
+    justify-content: space-between;
+  }
+  .metric {
+    font-size: 4.5em;
+  }
+
 }
