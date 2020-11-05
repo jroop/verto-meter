@@ -67,6 +67,10 @@ input {
   margin: 0.25em;
   border: 1px solid #333;
 }
+.running {
+  color: #087f23;
+  background-color: #c8e6c9;
+}
 
 @media only screen and (max-device-width: 500px) {
   body {
@@ -85,6 +89,7 @@ input {
   }
   .metric {
     font-size: 4.5em;
+    padding: 0.25m;
   }
 
 }

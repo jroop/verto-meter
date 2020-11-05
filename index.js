@@ -70,7 +70,7 @@ if (config.NOGPIO) {
   }
 
   const runner = async () => {
-    for (let t of [1000, 200, 200, 300, 2500, 300]) {
+    for (let t of [1000, 500, 500, 500, 500, 500]) {
       let res = await timer(t)
       console.log(res)
       ticker()

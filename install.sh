@@ -53,3 +53,6 @@ sudo systemctl enable ${APP}.service
 # start the application
 sudo systemctl restart ${APP}.service
 
+# to see logs
+# sudo journalctl -u {APP}.service -b
+

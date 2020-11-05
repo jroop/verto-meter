@@ -1,38 +1,5 @@
 import {Formatter} from './utils.js'
 
-const updateLogs = () => {
-  fetch('/logs')
-  .then(res => res.json())
-  .then(res => {
-
-    if (res.length > 0) {
-      let headers = ``
-      for(let k in res[0]) {
-        headers += `<th>${k}</th>`
-      }
-      let record = `<table>
-        <thead>
-          <tr>
-            ${headers}
-          </tr>
-        </thead>
-        <tbody>`
-      for (let r of res) {
-        record += '<tr>'
-        for (let k in r) {
-          record += `<td>${r[k]}</td>`
-        }
-        record += '</tr>'
-      }
-      record += `</tbody></table>`
-      document.getElementById('logs').innerHTML = record
-    }
-  })
-  .catch(e => {
-    console.error(e)
-  })
-}
-
 const updateCurrent = async (opts={}) => {
 
   try {
@@ -43,9 +10,9 @@ const updateCurrent = async (opts={}) => {
     }
     res = await res.json()
 
+    let delta = Date.now() - (res.time + res.start)
     let end = Formatter.timestamp(res.start + res.time)
     res = Formatter.format(res)
-    console.log(res)
 
     /* build user block */
     opts.user.innerHTML = `
@@ -55,9 +22,15 @@ const updateCurrent = async (opts={}) => {
       <div class="time">start: ${res.start}</div>
       <div class="time">end: ${end}</div>
     `
-    opts.time.innerHTML = `
-      <div class="metric">${res.time}</div>
-    `
+
+
+    if (delta  > 3000) {
+      opts.time.classList.remove('running')
+    } else {
+      opts.time.classList.add('running')
+    }
+    opts.time.innerHTML = `<div class="metric">${res.time}</div>`
+
     opts.distance.innerHTML = `
       <div class="metric">${res.distance}</div><div>(ft)</div>
     `
@@ -72,9 +45,6 @@ const updateCurrent = async (opts={}) => {
 }
 
 window.onload = async () => {
-  setInterval(() => {
-    // updateLogs()
-  }, 5000)
 
   let user = document.getElementById('user')
   let start = document.getElementById('start')
