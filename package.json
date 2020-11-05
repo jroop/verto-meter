@@ -6,7 +6,8 @@
   "author": "joe.roop@gmail.com",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
