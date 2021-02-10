@@ -1,5 +1,7 @@
 import {Formatter} from './utils.js'
 
+const INACTIVE = 3000 /* time to wait until trigger inactive */
+
 const updateCurrent = async (opts={}) => {
 
   try {
@@ -23,19 +25,26 @@ const updateCurrent = async (opts={}) => {
       <div class="time">end: ${end}</div>
     `
 
-
-    if (delta  > 3000) {
+    let rest = 0 /* stop the timer */
+    if (delta  > INACTIVE) {
       opts.time.classList.remove('running')
+      /* start rest timer */
+      rest = Formatter.ms2hms(delta - INACTIVE)
+      opts.rest.classList.add('resting')
     } else {
       opts.time.classList.add('running')
+      opts.rest.classList.remove('resting')
     }
+
+    opts.rest.innerHTML = `<div class="metric medium">${rest}</div><div>(rest)</div>`
+
     opts.time.innerHTML = `<div class="metric">${res.time}</div>`
 
     opts.distance.innerHTML = `
-      <div class="metric">${res.distance}</div><div>(ft)</div>
+      <div class="metric medium">${res.distance}</div><div>(ft)</div>
     `
     opts.speed.innerHTML = `
-      <div class="metric">${res.speed}</div><div>(ft/min)</div>
+      <div class="metric medium">${res.speed}</div><div>(ft/min)</div>
     `
 
 
@@ -51,6 +60,7 @@ window.onload = async () => {
   let distance = document.getElementById('distance')
   let speed = document.getElementById('speed')
   let time = document.getElementById('time')
+  let rest = document.getElementById('rest')
 
 
   setInterval(() => {
@@ -59,7 +69,8 @@ window.onload = async () => {
       start,
       distance,
       speed,
-      time
+      time,
+      rest
     })
   }, 1000)
 }

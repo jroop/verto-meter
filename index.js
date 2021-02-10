@@ -13,7 +13,7 @@ let config = {
   PORT: process.env.APP_PORT || 80,
   TIMETOSAVE: process.env.APP_TIMETOSAVE || 10000,
   DISTANCEPERTICK: process.env.APP_DISTANCEPERTICK || 0.5, /* ft */
-  NOGPIO: process.env.APP_NOGPIO || false,
+  NOGPIO: process.env.APP_NOGPIO || false, /* set true if no RPI pins */
   TICKPIN: process.env.APP_TICKPIN || 4, /* GPIO pin to use */
   DBPATH: process.env.APP_DBPATH || path.join(require('os').homedir(), 'verto-meter.db'),
   DBTABLE: process.env.APP_DBTABLE || 'climbs'
@@ -45,7 +45,7 @@ let timed = () => {
       console.error(e)
     }
     state.reset()
-  }, 10000)
+  }, config.TIMETOSAVE)
 }
 
 let ender = null

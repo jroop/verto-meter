@@ -71,6 +71,10 @@ input {
   color: #087f23;
   background-color: #c8e6c9;
 }
+.resting {
+  color: #b61827;
+  background-color: #f6bbc1;
+}
 
 @media only screen and (max-device-width: 500px) {
   body {
@@ -84,12 +88,23 @@ input {
     justify-content: center;
     align-items: baseline;
   }
+  .col {
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
+  }
   .record .parameter {
     justify-content: space-between;
   }
   .metric {
     font-size: 4.5em;
     padding: 0.25m;
+  }
+  .medium {
+    font-size: 3.5em;
+  }
+  .small {
+    font-size: 2.5em;
   }
 
 }
