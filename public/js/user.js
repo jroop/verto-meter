@@ -37,6 +37,16 @@ const init = async () => {
       alert(JSON.stringify(e.stack, null, 2))
     }
   }
+
+  /* for user list cache clear */
+  const clear = document.getElementById('clear')
+
+  clear.onclick = async (e) => {
+    e.preventDefault()
+    let r = await fetch('/state/users/clear')
+    r = await r.json()
+    location.href = '.'
+  }
 }
 
 window.onload = init
