@@ -9,13 +9,24 @@ module.exports = (app) => {
       res.json(state.values())
     })
 
+    router.get('/users', (req, res) => {
+      res.json(state.users)
+    })
+
     router.post('/', (req, res) => {
-      if (req.body.name) state.name = req.body.name
-      if (req.body.email) state.email = req.body.email
-      res.json({
-        status: 200,
-        message: 'OK'
-      })
+      if (req.body.name && req.body.email){
+        state.user = {name: req.body.name, email: req.body.email}
+        res.json({
+          status: 200,
+          message: 'OK'
+        })
+      }else {
+        res.json({
+          status: 500,
+          message: 'no name or email values found in post'
+        })
+      }
+      
     })
 
     return router
