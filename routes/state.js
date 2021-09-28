@@ -13,6 +13,15 @@ module.exports = (app) => {
       res.json(state.users)
     })
 
+    router.get('/users/clear', (req, res) => {
+      /* update the state list */
+      state.clearUsers()
+      res.json({
+        code: 200,
+        message: 'OK'
+      })
+    })
+
     router.post('/', (req, res) => {
       if (req.body.name && req.body.email){
         state.user = {name: req.body.name, email: req.body.email}
