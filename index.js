@@ -3,6 +3,7 @@ const app = express()
 const path = require('path')
 
 const stateAPI = require('./routes/state')(app)
+const emailAPI = require('./routes/email')(app)
 const State = require('./lib/State')
 const PinAlert = require('./lib/PinAlert')
 const {TableUtil, TableClimbs} = require('./lib/db')
@@ -23,12 +24,14 @@ let state = new State({
   distancePerTick: config.DISTANCEPERTICK
 })
 
+
 const main = async () => {
   try {
     table = await TableClimbs.init({
       dbPath: config.DBPATH,
       tableName: config.DBTABLE
     })
+    app.use('/email', emailAPI(state, table))
   } catch (e) {
     console.error(e)
   }

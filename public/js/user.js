@@ -5,6 +5,18 @@ const init = async () => {
     location.href = '/'
   }
 
+  let state, time
+  try {
+    let r = await fetch('/state')
+    if (r.status !== 200) {
+      console.error(r)
+      throw Error(r)
+    }
+    state = await r.json()
+  }catch(e) {
+    console/error(e)
+  }
+
   let name = document.getElementById('name')
   let email = document.getElementById('email')
 
@@ -46,6 +58,37 @@ const init = async () => {
     let r = await fetch('/state/users/clear')
     r = await r.json()
     location.href = '.'
+  }
+
+  /* set the current user */
+  document.getElementById('user').innerHTML = `${state.name} (${state.email})`
+
+  /* set the time back 60 mins */
+  const datetime = document.getElementById('localtime')
+  // datetime.setAttribute('value', new Date(Date.now() - 1000*60*60).getTime().toString())
+
+  const save = document.getElementById('save') 
+
+  save.onclick = async (e) => {
+    e.preventDefault()
+    const body = {
+      name: state.name,
+      email: state.email,
+      timestamp: (new Date(datetime.value)).getTime()
+    }
+    try {
+      let r = await fetch('/email/save', {
+        method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+      })
+      console.log(await r.json())
+      // location.href = '.'
+    }catch(e) {
+      console.error(e)
+    }
   }
 }
 
