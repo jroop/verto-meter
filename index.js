@@ -8,6 +8,12 @@ const State = require('./lib/State')
 const PinAlert = require('./lib/PinAlert')
 const {TableUtil, TableClimbs} = require('./lib/db')
 
+/* sendgrid key */
+const sendgridfile = require('/etc/keys/sendgrid.json')
+const sendgridkey = sendgridfile.APIKEY
+
+
+
 let table = null /* save reference to database */
 
 let config = {
@@ -31,7 +37,7 @@ const main = async () => {
       dbPath: config.DBPATH,
       tableName: config.DBTABLE
     })
-    app.use('/email', emailAPI(state, table))
+    app.use('/email', emailAPI(state, table, sendgridkey))
   } catch (e) {
     console.error(e)
   }

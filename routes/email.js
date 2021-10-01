@@ -4,11 +4,11 @@ module.exports = (app) => {
   const express = require('express')
   app.use(express.json())
 
-  /* for sendgrid */
-  const APIKEY = process.env.APIKEY
-  if(!APIKEY) throw Error('no APIKEY in environment')
+  return (state, table, sendgridkey) => {
 
-  return (state, table) => {
+    /* for sendgrid */
+    const SENDGRIDKEY = sendgridkey || process.env.SENDGRIDKEY
+    if(!SENDGRIDKEY) throw Error('no SENDGRIDKEY in environment')
 
     const router = express.Router()
 
@@ -35,7 +35,7 @@ module.exports = (app) => {
           html: html
         }
 
-        sgMail.setApiKey(APIKEY)
+        sgMail.setApiKey(SENDGRIDKEY)
         let r = await sgMail.send(message)
 
         res.json({
